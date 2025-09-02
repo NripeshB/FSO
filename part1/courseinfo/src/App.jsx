@@ -1,3 +1,11 @@
+const Parts = (props)=>{
+  return(
+      <p>
+        {props.p} {props.e}
+      </p> 
+  )
+}
+
 const Header = (props)=>{
   // console.log(props.heading);
   return(
@@ -9,15 +17,9 @@ const Header = (props)=>{
 const Content = (props)=>{
 return(
   <>
-    <p>
-        {props.p1} {props.e1}
-      </p>
-      <p>
-        {props.p2} {props.e2}
-      </p>
-      <p>
-        {props.p3} {props.e3}
-      </p>
+    <Parts p={props.p1} e = {props.e1} />
+    <Parts p={props.p2} e = {props.e2} />
+    <Parts p={props.p3} e = {props.e3} />
   </>
 )
 }
