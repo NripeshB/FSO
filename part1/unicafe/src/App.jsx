@@ -1,4 +1,9 @@
 import { useState } from 'react'
+const StatisticLine = (props)=>{
+  return(
+    <div>{props.text} {props.value}</div>
+  )
+}
 const Statistics = (props) =>{
   return (props.all === 0)?
   <>
@@ -8,12 +13,13 @@ const Statistics = (props) =>{
   :
   <>   
     <h1>statistics</h1>
-    <div>good  {props.good}</div>
-    <div>neutral  {props.neutral}</div>
-    <div>bad  {props.bad}</div>
-    <div>all  {props.all}</div>
-    <div>average  {props.average}</div>
-    <div>positive  {props.positive}%</div>
+    <StatisticLine text="good" value ={props.good} />
+    <StatisticLine text="neutral" value ={props.neutral} />
+    <StatisticLine text="bad" value ={props.bad} />
+    <StatisticLine text="all" value ={props.all} />
+    <StatisticLine text="average" value ={props.average} />
+    <StatisticLine text="positive" value ={props.positive+"%"} />
+    
   </>
   
 }
@@ -25,7 +31,7 @@ const App = () => {
   const [bad, setBad] = useState(0)
   const all = good + neutral + bad;
   const average = all === 0 ? 0: (good - bad)/all;
-  const positive = all ===0? 0: (good/all);
+  const positive = all === 0? 0: (good/all);
   // const [all, setAll] = useState(0)
   // const [average, setAverage] = useState(0)
   // const [positive, setPositive] = useState(0)
