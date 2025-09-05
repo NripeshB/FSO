@@ -1,19 +1,21 @@
 import { useState } from 'react'
 const Statistics = (props) =>{
-  return(
-
-<>
-      
-      <h1>statistics</h1>
-
-      <div>good  {props.good}</div>
-      <div>neutral  {props.neutral}</div>
-      <div>bad  {props.bad}</div>
-      <div>all  {props.all}</div>
-      <div>average  {props.average}</div>
-      <div>positive  {props.positive}%</div>
-    </>
-  )
+  return (props.all === 0)?
+  <>
+    <h1>statistics</h1>
+    <h4>No Feedback given</h4>
+  </>
+  :
+  <>   
+    <h1>statistics</h1>
+    <div>good  {props.good}</div>
+    <div>neutral  {props.neutral}</div>
+    <div>bad  {props.bad}</div>
+    <div>all  {props.all}</div>
+    <div>average  {props.average}</div>
+    <div>positive  {props.positive}%</div>
+  </>
+  
 }
 const App = () => {
   
