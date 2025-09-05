@@ -1,39 +1,43 @@
 import { useState } from 'react'
 
 const App = () => {
+  
   // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  const [all, setAll] = useState(0)
-  const [average, setAverage] = useState(0)
-  const [positive, setPositive] = useState(0)
+  const all = good + neutral + bad;
+  const average = all === 0 ? 0: (good - bad)/all;
+  const positive = all ===0? 0: (good/all);
+  // const [all, setAll] = useState(0)
+  // const [average, setAverage] = useState(0)
+  // const [positive, setPositive] = useState(0)
 
   const handleGoodClick = () => {
     const NewGood = good+1;
     setGood(NewGood);
-    const NewAll = all+1;
-    setAll(NewAll);
-    setPositive(((NewGood)/NewAll)*100);
-     setAverage((NewGood - bad) /(NewAll));
+    // const NewAll = all+1;
+    // setAll(NewAll);
+    // setPositive(((NewGood)/NewAll)*100);
+    //  setAverage((NewGood - bad) /(NewAll));
 
   }
   const handleNeutralClick = () => { 
     const NewNeutral = neutral+1;
     setNeutral(NewNeutral);
-    const NewAll = all+1;
-    setAll(NewAll);
-    setPositive(((good)/NewAll)*100);
-    setAverage((good - bad) /(NewAll));
+    // const NewAll = all+1;
+    // setAll(NewAll);
+    // setPositive(((good)/NewAll)*100);
+    // setAverage((good - bad) /(NewAll));
 
   }
   const handleBadClick = () => {
     const NewBad = bad+1;
     setBad(NewBad);
-    const NewAll = all+1;
-    setAll(NewAll);
-    setPositive(((good)/NewAll)*100);
-    setAverage((good - NewBad) /(NewAll));
+    // const NewAll = all+1;
+    // setAll(NewAll);
+    // setPositive(((good)/NewAll)*100);
+    // setAverage((good - NewBad) /(NewAll));
 
 }
 
