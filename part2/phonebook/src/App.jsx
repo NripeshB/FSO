@@ -13,6 +13,9 @@ const handleOnClick = (event)=>{
   if(newName ===""){
     alert("Enter a valid name")
   }
+  else if(persons.some(person=>person.name === newName)){
+    alert(`${newName} is already added to the phonebook`)
+  }
   else{
 const newNameObj = {
     name: newName
