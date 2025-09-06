@@ -29,10 +29,15 @@ return(
   </>
 )
 }
-const Total = (props)=>{
-return(
-   <p>Number of exercises { props.e.parts[0].exercises +props.e.parts[1].exercises+props.e.parts[2].exercises}</p>
-)
+const Total = ({e})=>{
+
+  const total = e.parts.reduce((sum, part) => sum + part.exercises, 0)
+
+  return (
+    <b>Number of exercises {total}</b>
+    //  <b>Number of exercises { props.e.parts[0].exercises +props.e.parts[1].exercises+props.e.parts[2].exercises}</b>
+  )
+
 }
 const Course = (props)=>{
   return(<>
@@ -62,7 +67,12 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
-      }
+      },
+      {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
     ]
   }
 
