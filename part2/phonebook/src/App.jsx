@@ -1,5 +1,40 @@
 import { useState } from 'react'
 
+const PersonForm = ({handleNameChange,handleNumberChange,newName,newNumber,handleOnClick}) => {
+  return (<>
+  <form>
+        <div>
+          name: <input onChange={handleNameChange} value={newName} />
+        </div>
+        <div>
+          number: <input onChange={handleNumberChange} value={newNumber} />
+        </div>
+        <div>
+          <button type="submit" onClick={handleOnClick}>add</button>
+        </div>
+      </form> 
+  </>)
+}
+
+const Persons = ({personsToShow})=>{
+  return(
+    personsToShow.map(person => (
+        <div key={person.name}>
+          {person.name} {person.number}
+        </div>
+      ))
+  )
+  
+}
+const Filter = ({filter, handleFilterChange})=>{
+      return(
+          <div>
+            filter shown with: <input value={filter} onChange={handleFilterChange} />
+          </div>
+      )
+      
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-1234567' }
@@ -43,11 +78,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
+      <Filter filter={filter} handleFilterChange={handleFilterChange}></Filter>
+      {/* <div>
         filter shown with: <input value={filter} onChange={handleFilterChange} />
-      </div>
+      </div> */}
+      <PersonForm handleNameChange = {handleNameChange} newName = {newName}
+      handleNumberChange = {handleNumberChange} newNumbe={newNumber}
+      handleOnClick = {handleOnClick}>
 
-      <form>
+      </PersonForm>
+      {/* <form>
         <div>
           name: <input onChange={handleNameChange} value={newName} />
         </div>
@@ -57,14 +97,15 @@ const App = () => {
         <div>
           <button type="submit" onClick={handleOnClick}>add</button>
         </div>
-      </form>
+      </form> */}
 
       <h2>Numbers</h2>
-      {personsToShow.map(person => (
+      <Persons   personsToShow={personsToShow}></Persons>
+      {/* {personsToShow.map(person => (
         <div key={person.name}>
           {person.name} {person.number}
         </div>
-      ))}
+      ))} */}
     </div>
   )
 }
