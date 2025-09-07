@@ -1,5 +1,5 @@
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 const PersonForm = ({handleNameChange,handleNumberChange,newName,newNumber,handleOnClick}) => {
   return (<>
   <form>
@@ -42,6 +42,19 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('') 
   const [newName, setNewName] = useState('')
   const [filter, setFilter] = useState('')   
+
+  const usePhoneBookData = ()=>{
+    return(
+      axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fulfilled')
+      console.log(response.data)
+      setPersons(response.data)
+    })
+    )
+  }
+  useEffect(usePhoneBookData, [])
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
