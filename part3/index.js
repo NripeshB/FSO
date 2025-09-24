@@ -29,9 +29,15 @@ app.get('/api/persons', (request, response)=>{
 })
 app.post('/api/persons', (request, response)=>{
     const body = request.body
-    if(!body.name){
+    const doesNameExist = notes.some(person=> person.name === body.name)
+    if(!body.name || !body.number){
         return response.status(400).json({
             error: "content missing"
+        })
+    }
+    if(doesNameExist){
+        return response.status(400).json({
+            error: "The name already exists."
         })
     }
     const note = {
