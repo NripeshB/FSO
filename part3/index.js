@@ -37,7 +37,7 @@ app.post('/api/persons', (request, response)=>{
     }
     if(doesNameExist){
         return response.status(400).json({
-            error: "The name already exists."
+            error: 'name must be unique' 
         })
     }
     const note = {
