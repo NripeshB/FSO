@@ -27,6 +27,22 @@ let notes = [
 app.get('/api/persons', (request, response)=>{
     response.json(notes)
 })
+app.post('/api/persons', (request, response)=>{
+    const body = request.body
+    if(!body.name){
+        return response.status(400).json({
+            error: "content missing"
+        })
+    }
+    const note = {
+        id: String(Math.floor(Math.random() * 999999999)),
+        name: body.name,
+        number: body.number
+    }
+    notes = notes.concat(note)
+    response.json(notes)
+    
+})
 
 app.get('/info', (request, response)=>{
     let numOfNotes = notes.length;
