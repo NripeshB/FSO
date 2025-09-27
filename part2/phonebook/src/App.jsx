@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 import personService from './persons'
 
-
-
-
-
 const PersonForm = ({ handleNameChange, handleNumberChange, newName, newNumber, handleOnClick }) => {
   return (
     <form>
