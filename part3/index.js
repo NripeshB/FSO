@@ -27,17 +27,13 @@ app.post('/api/persons', async (request, response, next) => {
   }
 
   try {
-    const existingPerson = await Person.findOne({ name })
-
-    // if (existingPerson) {
-    //   return response.status(400).json({ error: 'name must be unique' })
-    // }
-
     const person = new Person({ name, number })
     const savedPerson = await person.save()
 
     response.json(savedPerson)
   } catch (error) {
+    console.log(error.response.data.error);
+    
     next(error)
   }
 })
