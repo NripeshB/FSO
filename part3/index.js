@@ -86,13 +86,23 @@ app.get('/api/persons/:id', (request, response)=>{
     })
     .catch(error => next(error))
 })
-app.delete('/api/persons/:id', (request, response)=>{
-    Person.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
-})
+app.delete('/api/persons/:id', async (request, response, next) => {
+  const id = request.params.id;
+
+  try {
+    const person = await Person.findById(id);
+
+    if (!person) {
+      return response.status(404).json({ error: 'Person not found' });
+    }
+
+    await person.deleteOne(); 
+    response.status(204).end(); 
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 const PORT = process.env.PORT
 app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
