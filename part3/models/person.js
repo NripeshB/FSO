@@ -10,7 +10,6 @@ mongoose.connect(url)
 .catch((e)=>{
     console.log('error occured', e.message);
 })
-
 const personSchema = new mongoose.Schema({
     name: {type: String,
     minLength: 3,
