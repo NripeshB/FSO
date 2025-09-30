@@ -1,7 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-
+const logger = require('./utils/logger')
+const config = require('./utils/config')
 const app = express()
+app.use(express.json()) 
 
 const blogSchema = mongoose.Schema({
   title: String,
@@ -11,10 +14,7 @@ const blogSchema = mongoose.Schema({
 })
 
 const Blog = mongoose.model('Blog', blogSchema)
-const DbPassword = "1234567890"
-const DbUser = "FSO"
-const mongoUrl = `mongodb+srv://${DbUser}:${DbPassword}@fsopart3cluster.k1q0u5r.mongodb.net/?retryWrites=true&w=majority&appName=FsoPart3Cluster`
-mongoose.connect(mongoUrl)
+mongoose.connect(config.MONGODB_URI)
 
 app.use(express.json())
 
@@ -32,7 +32,6 @@ app.post('/api/blogs', (request, response) => {
   })
 })
 
-const PORT = 3003
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+app.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`)
 })
