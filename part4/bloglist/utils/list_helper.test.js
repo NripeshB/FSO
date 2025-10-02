@@ -1,66 +1,41 @@
-const { test, describe } = require('node:test')
-const assert = require('node:assert')
-const listHelper = require('./list_helper')
+const { test, after, beforeEach } = require('node:test')
+const assert = require('assert')
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const app = require('../app')
+const Blog = require('../models/blogs')
 
-const blogs = [
+const api = supertest(app)
+
+const initialBlogs = [
   {
-    _id: '1',
-    title: 'Blog A',
-    author: 'Alice',
-    url: 'http://a.com',
-    likes: 7,
-    __v: 0,
+    title: "First blog",
+    author: "Alice",
+    url: "http://example.com/1",
+    likes: 5
   },
   {
-    _id: '2',
-    title: 'Blog B',
-    author: 'Bob',
-    url: 'http://b.com',
-    likes: 5,
-    __v: 0,
-  },
-  {
-    _id: '3',
-    title: 'Blog C',
-    author: 'Alice',
-    url: 'http://c.com',
-    likes: 12,
-    __v: 0,
-  },
+    title: "Second blog",
+    author: "Bob",
+    url: "http://example.com/2",
+    likes: 10
+  }
 ]
 
-test('dummy returns one', () => {
-  const result = listHelper.dummy([])
-  assert.strictEqual(result, 1)
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  await Blog.insertMany(initialBlogs)
 })
 
-describe('total likes', () => {
-  test('of empty list is zero', () => {
-    assert.strictEqual(listHelper.totalLikes([]), 0)
-  })
+test('blogs are returned as json and correct amount', async () => {
+  const response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
 
-  test('of a bigger list is calculated correctly', () => {
-    assert.strictEqual(listHelper.totalLikes(blogs), 24)
-  })
+  assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
-describe('favorite blog', () => {
-  test('returns the blog with most likes', () => {
-    const result = listHelper.favoriteBlog(blogs)
-    assert.deepStrictEqual(result, blogs[2]) 
-  })
-})
-
-describe('most blogs', () => {
-  test('returns author with most blogs', () => {
-    const result = listHelper.mostBlogs(blogs)
-    assert.deepStrictEqual(result, { author: 'Alice', blogs: 2 })
-  })
-})
-
-describe('most likes', () => {
-  test('returns author with most total likes', () => {
-    const result = listHelper.mostLikes(blogs)
-    assert.deepStrictEqual(result, { author: 'Alice', likes: 19 })
-  })
+after(async () => {
+  await mongoose.connection.close()
 })
