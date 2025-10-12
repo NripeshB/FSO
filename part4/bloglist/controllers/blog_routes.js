@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blogs')
 const User = require('../models/user')
+const { tokenExtractor, userExtractor } = require('../middleware/tokenEx')
 
 blogsRouter.get('/', async(request, response) => {
   const Blogs = await Blog
@@ -9,22 +10,32 @@ blogsRouter.get('/', async(request, response) => {
     response.json(Blogs)
 })
 
-blogsRouter.post('/', async (request, response) => {
-  const { title, author, url, likes, user } = request.body
+
+blogsRouter.post('/', tokenExtractor, userExtractor, async (req, res) => {
+  const { title, author, url, likes } = req.body
+
   if (!title || !url) {
-    return response.status(400).json({ error: 'title and url are required' })
+    return res.status(400).json({ error: 'title and url are required' })
+  }
+  
+  const user = await User.findById(req.user.id)
+  if (!user) {
+    return res.status(401).json({ error: 'invalid user' })
   }
 
-  const blog = new Blog({ title, author, url, likes, user })
+  const blog = new Blog({
+    title,
+    author,
+    url,
+    likes: likes || 0,
+    user: user._id 
+  })
 
   const savedBlog = await blog.save()
-  const foundUser = await User.findById(user)
-  if (foundUser) {
-    foundUser.blogs = foundUser.blogs.concat(savedBlog._id)
-    await foundUser.save()
-  }
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
 
-  response.status(201).json(savedBlog)
+  res.status(201).json(savedBlog)
 })
 
 
