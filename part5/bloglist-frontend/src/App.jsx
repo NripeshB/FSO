@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/notification' 
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,7 @@ const App = () => {
   const [url, setUrl] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)  // ✅ added
 
   useEffect(()=>{
     blogService.getAll().then(blogs =>
@@ -25,49 +27,56 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-    
-    
   }, [])
 
-   const handleLogin = async event => {
+  const handleLogin = async event => {
     event.preventDefault()
-    
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedInUser',JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
+      setMessage(`Welcome ${user.name}`)            // ✅ success message
+      setTimeout(() => setMessage(null), 5000)      // disappear in 5s
     } catch {
       console.log('wrong credentials')
+      setMessage('Wrong username or password')      // ✅ error message
+      setTimeout(() => setMessage(null), 5000)
     }
   }
-const logUserOut = ()=>{
-  blogService.setToken(null) 
-  setUser(null)
-  window.localStorage.removeItem('loggedInUser')
-}
 
-const handleCreateBlog = async (event) => {
-  event.preventDefault()
-
-  const newBlog = {
-    title,
-    author,
-    url,
+  const logUserOut = ()=>{
+    blogService.setToken(null) 
+    setUser(null)
+    window.localStorage.removeItem('loggedInUser')
+    setMessage('Logged out successfully')            // ✅ added
+    setTimeout(() => setMessage(null), 5000)
   }
 
-  try {
-    const createdBlog = await blogService.create(newBlog)
-    setBlogs(blogs.concat(createdBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  } catch (error) {
-    console.log('Error creating blog:', error)
-  }
-}
+  const handleCreateBlog = async (event) => {
+    event.preventDefault()
 
+    const newBlog = {
+      title,
+      author,
+      url,
+    }
+
+    try {
+      const createdBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(createdBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setMessage(`New blog added: ${createdBlog.title}`)  // ✅ success message
+      setTimeout(() => setMessage(null), 5000)
+    } catch (error) {
+      console.log('Error creating blog:', error)
+      setMessage('Failed to create blog')                // ✅ error message
+      setTimeout(() => setMessage(null), 5000)
+    }
+  }
 
   const LoginForm = () => (
     <>
@@ -156,10 +165,11 @@ const handleCreateBlog = async (event) => {
 
   return (
     <div>
+      <Notification message={message} />
       {!user && LoginForm()}
-    {user && (
-      LoggedPage()
-    )}
+      {user && (
+        LoggedPage()
+      )}
     </div>
   )
 }
