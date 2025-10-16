@@ -147,46 +147,24 @@ const App = () => {
     </>
   )
 
-  // const LoggedPage = ({url, handleCreateBlog, author, title})=>{
-  //   return(
-  //     <>
-  //      <div>
-  //      <h1>blogs</h1>
-  //       <p>{user.name} logged in</p>
-  //     </div>
-
-  //     <CreateBlog url={url} handleCreateBlog={handleCreateBlog} author={author} title={title} setAuthor={setAuthor} setTitle={setTitle} setUrl={setUrl}></CreateBlog>
-
-  //     <div>
-  //       {blogs.map(blog =>
-  //       <Blog key={blog.id} blog={blog} />
-  //     )}
-  //     <button onClick={logUserOut}>logout</button>
-  //     </div>
-  //     </>
-  //   )
-  // }
-
   return (
     <div>
       <Notification message={message} />
       {!user && LoginForm()}
       {user && (
-  <LoggedPage
-    url={url}
-    handleCreateBlog={handleCreateBlog}
-    author={author}
-    title={title}
-    setAuthor={setAuthor}
-    setTitle={setTitle}
-    setUrl={setUrl}
-    blogs={blogs}
-    user={user}
-    logUserOut={logUserOut}
-  />
-)}
-
-
+      <LoggedPage
+        url={url}
+        handleCreateBlog={handleCreateBlog}
+        author={author}
+        title={title}
+        setAuthor={setAuthor}
+        setTitle={setTitle}
+        setUrl={setUrl}
+        blogs={blogs}
+        user={user}
+        logUserOut={logUserOut}
+      />
+      )}
     </div>
   )
 }
