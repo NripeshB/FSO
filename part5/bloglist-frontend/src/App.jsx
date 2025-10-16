@@ -12,7 +12,8 @@ const App = () => {
   const [url, setUrl] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)  // ✅ added
+  const [message, setMessage] = useState(null)  
+  const [loginVisible, setLoginVisible] = useState(false)  
 
   useEffect(()=>{
     blogService.getAll().then(blogs =>
@@ -37,11 +38,11 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setMessage(`Welcome ${user.name}`)            // ✅ success message
-      setTimeout(() => setMessage(null), 5000)      // disappear in 5s
+      setMessage(`Welcome ${user.name}`)            
+      setTimeout(() => setMessage(null), 5000)      
     } catch {
       console.log('wrong credentials')
-      setMessage('Wrong username or password')      // ✅ error message
+      setMessage('Wrong username or password')      
       setTimeout(() => setMessage(null), 5000)
     }
   }
@@ -50,7 +51,7 @@ const App = () => {
     blogService.setToken(null) 
     setUser(null)
     window.localStorage.removeItem('loggedInUser')
-    setMessage('Logged out successfully')            // ✅ added
+    setMessage('Logged out successfully')           
     setTimeout(() => setMessage(null), 5000)
   }
 
@@ -69,11 +70,11 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      setMessage(`New blog added: ${createdBlog.title}`)  // ✅ success message
+      setMessage(`New blog added: ${createdBlog.title}`)  
       setTimeout(() => setMessage(null), 5000)
     } catch (error) {
       console.log('Error creating blog:', error)
-      setMessage('Failed to create blog')                // ✅ error message
+      setMessage('Failed to create blog')              
       setTimeout(() => setMessage(null), 5000)
     }
   }
@@ -107,7 +108,10 @@ const App = () => {
     </>
   )
 
-  const LoggedPage = ()=>{
+  const LoggedPage = ({url, handleCreateBlog, author, title})=>{
+    const hideWhenVisible = {display: loginVisible? 'none':''}
+    const showWhenVisible = {display: loginVisible? '':'none'}
+
     return(
       <>
        <div>
@@ -117,40 +121,48 @@ const App = () => {
       </div>
 
       <div>
-        <h1>Create New Blog</h1>
-        <form onSubmit={handleCreateBlog}>
+        <div style={hideWhenVisible}>
+          <button onClick={()=>setLoginVisible(true)}>Create new Blog </button>
+        </div>
+        <div style={showWhenVisible}>
+          <h1>Create New Blog</h1>
+          <form onSubmit={handleCreateBlog}>
+            <div>
+              <label>
+                title
+                <input
+                  type="text"
+                  value={title}
+                  onChange={({ target }) => setTitle(target.value)}
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                author
+                <input
+                  type="text"
+                  value={author}
+                  onChange={({ target }) => setAuthor(target.value)}
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                url
+                <input
+                  type="text"
+                  value={url}
+                  onChange={({ target }) => setUrl(target.value)}
+                />
+              </label>
+            </div>
+            <button type="submit">create</button>
+          </form>
           <div>
-            <label>
-              title
-              <input
-                type="text"
-                value={title}
-                onChange={({ target }) => setTitle(target.value)}
-              />
-            </label>
+            <button onClick={() => setLoginVisible(false)}>Close</button>
           </div>
-          <div>
-            <label>
-              author
-              <input
-                type="text"
-                value={author}
-                onChange={({ target }) => setAuthor(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              url
-              <input
-                type="text"
-                value={url}
-                onChange={({ target }) => setUrl(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">create</button>
-        </form>
+        </div>
       </div>
 
       <div>
@@ -168,7 +180,7 @@ const App = () => {
       <Notification message={message} />
       {!user && LoginForm()}
       {user && (
-        LoggedPage()
+        LoggedPage(url, handleCreateBlog, author, title)
       )}
     </div>
   )
