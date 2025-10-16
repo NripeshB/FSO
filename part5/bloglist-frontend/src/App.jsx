@@ -3,6 +3,46 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/notification' 
+import CreateBlog from './components/CreateBlog'
+const LoggedPage = ({
+  url,
+  handleCreateBlog,
+  author,
+  title,
+  setAuthor,
+  setTitle,
+  setUrl,
+  blogs,
+  user,
+  logUserOut
+}) => {
+  return (
+    <>
+      <div>
+        <h1>blogs</h1>
+        <p>{user.name} logged in</p>
+      </div>
+
+      <CreateBlog
+        url={url}
+        handleCreateBlog={handleCreateBlog}
+        author={author}
+        title={title}
+        setAuthor={setAuthor}
+        setTitle={setTitle}
+        setUrl={setUrl}
+      />
+
+      <div>
+        {blogs.map(blog => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
+        <button onClick={logUserOut}>logout</button>
+      </div>
+    </>
+  )
+}
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,7 +53,6 @@ const App = () => {
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)  
-  const [loginVisible, setLoginVisible] = useState(false)  
 
   useEffect(()=>{
     blogService.getAll().then(blogs =>
@@ -108,80 +147,46 @@ const App = () => {
     </>
   )
 
-  const LoggedPage = ({url, handleCreateBlog, author, title})=>{
-    const hideWhenVisible = {display: loginVisible? 'none':''}
-    const showWhenVisible = {display: loginVisible? '':'none'}
+  // const LoggedPage = ({url, handleCreateBlog, author, title})=>{
+  //   return(
+  //     <>
+  //      <div>
+  //      <h1>blogs</h1>
+  //       <p>{user.name} logged in</p>
+  //     </div>
 
-    return(
-      <>
-       <div>
-       <h1>blogs</h1>
-        <p>{user.name} logged in</p>
-      
-      </div>
+  //     <CreateBlog url={url} handleCreateBlog={handleCreateBlog} author={author} title={title} setAuthor={setAuthor} setTitle={setTitle} setUrl={setUrl}></CreateBlog>
 
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={()=>setLoginVisible(true)}>Create new Blog </button>
-        </div>
-        <div style={showWhenVisible}>
-          <h1>Create New Blog</h1>
-          <form onSubmit={handleCreateBlog}>
-            <div>
-              <label>
-                title
-                <input
-                  type="text"
-                  value={title}
-                  onChange={({ target }) => setTitle(target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                author
-                <input
-                  type="text"
-                  value={author}
-                  onChange={({ target }) => setAuthor(target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                url
-                <input
-                  type="text"
-                  value={url}
-                  onChange={({ target }) => setUrl(target.value)}
-                />
-              </label>
-            </div>
-            <button type="submit">create</button>
-          </form>
-          <div>
-            <button onClick={() => setLoginVisible(false)}>Close</button>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-      <button onClick={logUserOut}>logout</button>
-      </div>
-      </>
-    )
-  }
+  //     <div>
+  //       {blogs.map(blog =>
+  //       <Blog key={blog.id} blog={blog} />
+  //     )}
+  //     <button onClick={logUserOut}>logout</button>
+  //     </div>
+  //     </>
+  //   )
+  // }
 
   return (
     <div>
       <Notification message={message} />
       {!user && LoginForm()}
       {user && (
-        LoggedPage(url, handleCreateBlog, author, title)
-      )}
+  <LoggedPage
+    url={url}
+    handleCreateBlog={handleCreateBlog}
+    author={author}
+    title={title}
+    setAuthor={setAuthor}
+    setTitle={setTitle}
+    setUrl={setUrl}
+    blogs={blogs}
+    user={user}
+    logUserOut={logUserOut}
+  />
+)}
+
+
     </div>
   )
 }
