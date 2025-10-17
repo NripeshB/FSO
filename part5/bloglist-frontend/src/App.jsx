@@ -56,11 +56,13 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)  
 
-  useEffect(()=>{
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
+  useEffect(() => {
+  blogService.getAll().then(blogs => {
+    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+    setBlogs(sortedBlogs)
+  })
+}, [])
+
 
   useEffect(() => {
     const loggedInUserJson = window.localStorage.getItem('loggedInUser')
