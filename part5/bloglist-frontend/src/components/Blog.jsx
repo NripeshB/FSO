@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import blogService from './Likes'   
+import likeService from './Likes'   
+import deleteService from './DeleteBlog'   
 
 const Blog = ({ blog, setBlogs, blogs }) => { 
   const [infoVisible, setInfoVisible] = useState(false)
@@ -15,13 +16,26 @@ const Blog = ({ blog, setBlogs, blogs }) => {
   const hideWhenVisible = { display: infoVisible ? 'none' : '' }
   const showWhenVisible = { display: infoVisible ? '' : 'none' }
 
+  const handleDelete = async () => {
+  try {
+    const confirmed = window.confirm(`Delete ${blog.title} by ${blog.author}?`)
+    if (!confirmed) return
+
+    const status = await deleteService.deleteBlog(blog.id)
+    setBlogs(blogs.filter(b => b.id !== blog.id))
+    return status
+  } catch (error) {
+    console.error('Error deleting blog:', error)
+  }
+}
+
   const handleLike = async () => {
     try {
       const updatedBlog = {
         ...blog,
         likes: blog.likes + 1
       }
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+      const returnedBlog = await likeService.update(blog.id, updatedBlog)
 
       setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
     } catch (error) {
@@ -51,6 +65,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
           likes {blog.likes} <button onClick={handleLike}>Like</button>
         </div>
         <div>Posted by {blog.user.username}</div>
+        <button onClick={()=>handleDelete()}>Delete</button>
       </div>
     </div>
   )
