@@ -1,6 +1,9 @@
-import {useState} from 'react'
+import { useState } from 'react'
+import blogService from './Likes'   
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, setBlogs, blogs }) => { 
+  const [infoVisible, setInfoVisible] = useState(false)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -9,43 +12,48 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
-  const [InfoVisible, setInfoVisible] = useState(false)
-        
-  
-      const hideWhenVisible = {display: InfoVisible? 'none':''}
-      const showWhenVisible = {display: InfoVisible? '':'none'}
+  const hideWhenVisible = { display: infoVisible ? 'none' : '' }
+  const showWhenVisible = { display: infoVisible ? '' : 'none' }
+
+  const handleLike = async () => {
+    try {
+      const updatedBlog = {
+        ...blog,
+        likes: blog.likes + 1
+      }
+      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+
+      setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
+    } catch (error) {
+      console.error('Error updating likes:', error)
+    }
+  }
 
   return (
-    
-
     <div style={blogStyle}>
-     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-  <div>
-    {blog.title} {blog.author}
-  </div>
-
-  <div>
-    <div style={hideWhenVisible}>
-      <button onClick={() => setInfoVisible(true)}>View</button>
-    </div>
-    <div style={showWhenVisible}>
-      <button onClick={() => setInfoVisible(false)}>Hide</button>
-    </div>
-  </div>
-</div>
-
-
-      <div style={showWhenVisible}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          {blog.url}
+          {blog.title} {blog.author}
         </div>
         <div>
-          likes {blog.likes}
-        </div>
-        <div>
-          Posted by {blog.user.username}
+          <div style={hideWhenVisible}>
+            <button onClick={() => setInfoVisible(true)}>View</button>
+          </div>
+          <div style={showWhenVisible}>
+            <button onClick={() => setInfoVisible(false)}>Hide</button>
+          </div>
         </div>
       </div>
-  </div>
-)}
+
+      <div style={showWhenVisible}>
+        <div>{blog.url}</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          likes {blog.likes} <button onClick={handleLike}>Like</button>
+        </div>
+        <div>Posted by {blog.user.username}</div>
+      </div>
+    </div>
+  )
+}
+
 export default Blog

@@ -13,6 +13,7 @@ const LoggedPage = ({
   setTitle,
   setUrl,
   blogs,
+  setBlogs,
   user,
   logUserOut
 }) => {
@@ -35,8 +36,9 @@ const LoggedPage = ({
 
       <div>
         {blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+  <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
+))}
+
         <button onClick={logUserOut}>logout</button>
       </div>
     </>
@@ -163,6 +165,7 @@ const App = () => {
         blogs={blogs}
         user={user}
         logUserOut={logUserOut}
+        setBlogs={setBlogs}
       />
       )}
     </div>
