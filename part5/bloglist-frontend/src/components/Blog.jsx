@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import likeService from './Likes'   
-import deleteService from './DeleteBlog'   
+import likeService from './Likes'
+import deleteService from './DeleteBlog'
 
-const Blog = ({ blog, setBlogs, blogs }) => { 
+const Blog = ({ blog, setBlogs, blogs }) => {
   const [infoVisible, setInfoVisible] = useState(false)
 
   const blogStyle = {
@@ -17,17 +17,17 @@ const Blog = ({ blog, setBlogs, blogs }) => {
   const showWhenVisible = { display: infoVisible ? '' : 'none' }
 
   const handleDelete = async () => {
-  try {
-    const confirmed = window.confirm(`Delete ${blog.title} by ${blog.author}?`)
-    if (!confirmed) return
+    try {
+      const confirmed = window.confirm(`Delete ${blog.title} by ${blog.author}?`)
+      if (!confirmed) return
 
-    const status = await deleteService.deleteBlog(blog.id)
-    setBlogs(blogs.filter(b => b.id !== blog.id))
-    return status
-  } catch (error) {
-    console.error('Error deleting blog:', error)
+      const status = await deleteService.deleteBlog(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+      return status
+    } catch (error) {
+      console.error('Error deleting blog:', error)
+    }
   }
-}
 
   const handleLike = async () => {
     try {
@@ -65,7 +65,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
           likes {blog.likes} <button onClick={handleLike}>Like</button>
         </div>
         <div>Posted by {blog.user.username}</div>
-        <button onClick={()=>handleDelete()}>Delete</button>
+        <button onClick={() => handleDelete()}>Delete</button>
       </div>
     </div>
   )
