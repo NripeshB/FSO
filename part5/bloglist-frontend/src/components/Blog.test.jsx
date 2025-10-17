@@ -1,28 +1,48 @@
+import userEvent from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
-import { describe, test, expect } from 'vitest'
+import { test, expect } from 'vitest'
 import Blog from './Blog'
 
-describe('<Blog />', () => {
+test('renders title and author, not URL or likes by default', () => {
   const blog = {
-    title: 'Understanding React Testing',
-    author: 'Nripesh Bhusal',
-    url: 'https://example.com/blog/testing',
-    likes: 42,
-    user: { username: 'testuser', name: 'Test User' }
+    title: 'Learning Testing in React',
+    author: 'Test Author',
+    url: 'https://example.com',
+    likes: 7,
+    user: { username: 'tester' }
   }
 
-  test('renders title and author but not url or likes by default', () => {
-    render(<Blog blog={blog} />)
+  render(<Blog blog={blog} setBlogs={() => {}} blogs={[]} />)
 
-    const summaryDiv = screen.getByText(/Understanding React Testing/i)
-    expect(summaryDiv).toBeInTheDocument()
-    const element = screen.getByText(/Understanding React Testing\s*Nripesh Bhusal/i)
-    expect(element).toBeInTheDocument()
+  const titleAuthor = screen.getByText('Learning Testing in React Test Author')
+  expect(titleAuthor).toBeDefined()
 
-    const url = screen.queryByText('https://example.com/blog/testing')
-    const likes = screen.queryByText(/likes 42/i)
+  const url = screen.queryByText('https://example.com')
+  const likes = screen.queryByText('likes 7')
 
-    expect(url).not.toBeInTheDocument()
-    expect(likes).not.toBeInTheDocument()
-  })
+  expect(url).toBeNull()
+  expect(likes).toBeNull()
+})
+
+
+
+test('shows URL and likes when view button clicked', async () => {
+  const blog = {
+    title: 'Toggle visibility test',
+    author: 'Test Author',
+    url: 'https://example.com',
+    likes: 5,
+    user: { username: 'tester' }
+  }
+
+  render(<Blog blog={blog} setBlogs={() => {}} blogs={[]} />)
+  const user = userEvent.setup()
+  const button = screen.getByText('View')
+  await user.click(button)
+
+  const url = screen.getByText('https://example.com')
+  const likes = screen.getByText('likes 5')
+
+  expect(url).toBeDefined()
+  expect(likes).toBeDefined()
 })
