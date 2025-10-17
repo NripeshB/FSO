@@ -1,17 +1,16 @@
 import { useState } from 'react'
 
 
-const CreateBlog = ({url, handleCreateBlog, author, title, setTitle, setUrl, setAuthor})=>{
-    const [loginVisible, setLoginVisible] = useState(false)
-      
+const CreateBlog = ({ url, handleCreateBlog, author, title, setTitle, setUrl, setAuthor }) => {
+  const [loginVisible, setLoginVisible] = useState(false)
 
-    const hideWhenVisible = {display: loginVisible? 'none':''}
-    const showWhenVisible = {display: loginVisible? '':'none'}
-    return(
-        <>
-        <div>
+  const hideWhenVisible = { display: loginVisible? 'none':'' }
+  const showWhenVisible = { display: loginVisible? '':'none' }
+  return(
+    <>
+      <div>
         <div style={hideWhenVisible}>
-          <button onClick={()=>setLoginVisible(true)}>Create new Blog </button>
+          <button onClick={() => setLoginVisible(true)}>Create new Blog </button>
         </div>
         <div style={showWhenVisible}>
           <h1>Create New Blog</h1>
@@ -54,6 +53,6 @@ const CreateBlog = ({url, handleCreateBlog, author, title, setTitle, setUrl, set
         </div>
       </div>
     </>
-    )
+  )
 }
 export default CreateBlog
