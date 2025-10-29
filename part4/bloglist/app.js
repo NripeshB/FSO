@@ -33,6 +33,11 @@ mongoose
 
   next(error)
 }
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/test')
+  app.use('/api/testing', testingRouter)
+}
+
 app.use(express.json())
 
 app.use('/api/blogs', blogsRouter)
