@@ -1,5 +1,6 @@
 import NewAnecdote from './components/NewAnecdotes'
 import AnecdoteList from './components/AnecdoteList'
+import Filter from './components/Filter'
 const App = () => {
   // const anecdotes = useSelector(state => state)
   
@@ -9,6 +10,7 @@ const App = () => {
 
   return (
     <div>
+      <Filter/>
       <AnecdoteList/>
       <NewAnecdote/>
     </div>
