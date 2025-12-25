@@ -1,5 +1,4 @@
-import {  useDispatch } from 'react-redux'
-
+import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification, clearNotification } from '../reducers/notificationReducer'
 
@@ -8,14 +7,28 @@ let timeoutId
 const NewAnecdote = () => {
   const dispatch = useDispatch()
 
-  const addAnecdote = event => {
+  const addAnecdote = async (event) => {
     event.preventDefault()
 
     const anecdote = event.target.add_Anecdote.value
     event.target.add_Anecdote.value = ''
 
-    
-    dispatch(createAnecdote(anecdote))
+    const newAnecdote = {
+      content: anecdote,
+      votes: 0
+    }
+
+    const response = await fetch('http://localhost:3001/anecdotes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newAnecdote)
+    })
+
+    const savedAnecdote = await response.json()
+
+    dispatch(createAnecdote(savedAnecdote))
 
     dispatch(setNotification(`you added '${anecdote}'`))
 
