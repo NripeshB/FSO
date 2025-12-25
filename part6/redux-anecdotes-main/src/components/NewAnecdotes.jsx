@@ -3,7 +3,7 @@ import {  useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification, clearNotification } from '../reducers/notificationReducer'
 
-let timeoutId  // persists between renders
+let timeoutId  
 
 const NewAnecdote = () => {
   const dispatch = useDispatch()
@@ -14,18 +14,15 @@ const NewAnecdote = () => {
     const anecdote = event.target.add_Anecdote.value
     event.target.add_Anecdote.value = ''
 
-    // 1️⃣ create anecdote
+    
     dispatch(createAnecdote(anecdote))
 
-    // 2️⃣ show notification
     dispatch(setNotification(`you added '${anecdote}'`))
 
-    // 3️⃣ clear previous timer (VERY IMPORTANT)
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
 
-    // 4️⃣ hide notification after 5 seconds
     timeoutId = setTimeout(() => {
       dispatch(clearNotification())
     }, 5000)
