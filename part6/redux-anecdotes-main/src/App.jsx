@@ -4,10 +4,6 @@ import Filter from './components/Filter'
 const App = () => {
   // const anecdotes = useSelector(state => state)
   
-
-  
-  
-
   return (
     <div>
       <Filter/>
