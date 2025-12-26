@@ -1,56 +1,24 @@
 import { useDispatch } from 'react-redux'
-import { createAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification, clearNotification } from '../reducers/notificationReducer'
-
-let timeoutId  
+import { appendAnecdote } from '../reducers/anecdoteReducer'
+import { setNotificationTimed } from '../reducers/notificationReducer'
 
 const NewAnecdote = () => {
   const dispatch = useDispatch()
 
-  const addAnecdote = async (event) => {
+  const addAnecdote = (event) => {
     event.preventDefault()
-
-    const anecdote = event.target.add_Anecdote.value
+    const content = event.target.add_Anecdote.value
     event.target.add_Anecdote.value = ''
 
-    const newAnecdote = {
-      content: anecdote,
-      votes: 0
-    }
-
-    const response = await fetch('http://localhost:3001/anecdotes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newAnecdote)
-    })
-
-    const savedAnecdote = await response.json()
-
-    dispatch(createAnecdote(savedAnecdote))
-
-    dispatch(setNotification(`you added '${anecdote}'`))
-
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-
-    timeoutId = setTimeout(() => {
-      dispatch(clearNotification())
-    }, 5000)
+    dispatch(appendAnecdote(content))
+    dispatch(setNotificationTimed(`you added '${content}'`, 5))
   }
 
   return (
-    <div>
-      <h2>create new</h2>
-      <form onSubmit={addAnecdote}>
-        <div>
-          <input name="add_Anecdote" />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
+    <form onSubmit={addAnecdote}>
+      <input name="add_Anecdote" />
+      <button type="submit">create</button>
+    </form>
   )
 }
 
